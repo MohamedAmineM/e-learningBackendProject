@@ -1,0 +1,10 @@
+spring.application.name=demo
+spring.datasource.url=jdbc:postgresql://localhost:5432/madrasati?createDatabaseIfNotExist=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+spring.datasource.username=postgres
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.id.new_generator_mappings = true
+spring.jpa.properties.hibernate.format_sql = true
+spring.jpa.hibernate.ddl-auto=update
+
+
+
