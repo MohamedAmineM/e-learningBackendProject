@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: madrasati-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/madrasati
+      SPRING_DATASOURCE_USERNAME: madrasati
+      SPRING_DATASOURCE_PASSWORD: madrasati
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: madrasati-db
+    environment:
+      POSTGRES_DB: madrasati
+      POSTGRES_USER: madrasati
+      POSTGRES_PASSWORD: madrasati
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
