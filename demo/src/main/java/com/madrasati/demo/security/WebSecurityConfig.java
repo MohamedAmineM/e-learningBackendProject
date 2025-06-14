@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.util.List;
 
 import com.madrasati.demo.services.UserDetailsServiceImpl;
 
@@ -65,7 +66,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 var corsConfig = new org.springframework.web.cors.CorsConfiguration();
                 corsConfig.setAllowedOrigins(List.of(
                     "https://api.24.lebondeveloppeur.net",
-                    "https://localhost:3000"
+                    "http://localhost:3000"
                 ));
                 corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 corsConfig.setAllowedHeaders(List.of("*"));

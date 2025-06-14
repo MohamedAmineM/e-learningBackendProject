@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -12,6 +10,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/madrasati
       SPRING_DATASOURCE_USERNAME: madrasati
       SPRING_DATASOURCE_PASSWORD: madrasati
+    networks:
+      - my-network
     depends_on:
       - db
 
@@ -26,6 +26,12 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:            
+      - my-network
 
 volumes:
   db_data:
+
+networks:
+  my-network:
+    external: true
