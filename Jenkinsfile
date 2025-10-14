@@ -22,7 +22,7 @@ pipeline {
             steps {
                 dir('demo') {
                     script {
-                        sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                        bat "docker build -t ${DOCKER_IMAGE}:latest ."
                     }
                 }
             }
@@ -35,10 +35,10 @@ pipeline {
                 dir('demo') {
                     script {
                         // Make sure external network exists
-                        sh 'docker network ls | grep my-network || docker network create my-network'
+                        bat 'docker network ls | grep my-network || docker network create my-network'
 
-                        sh 'docker-compose down || true'
-                        sh 'docker-compose up -d'
+                        bat 'docker-compose down || true'
+                        bat 'docker-compose up -d'
                     }
                 }
             }
@@ -46,7 +46,7 @@ pipeline {
 
         stage('Check Running Containers') {
             steps {
-                sh 'docker ps'
+                bat 'docker ps'
             }
         }
     }
