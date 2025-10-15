@@ -27,22 +27,12 @@ pipeline {
                     script {
                         echo "======= Building and pushing Backend Docker image ======="
 
-                        withCredentials([
-                            usernamePassword(
-                                credentialsId: 'dockerhub_cred',
-                                usernameVariable: 'DOCKER_USER',
-                                passwordVariable: 'DOCKER_PASS'
-                            )
-                        ]) {
+                    
                             // Build Backend image (SpringBoot)
-                            bat "docker build -t %DOCKER_USER%/madrasati-backend ."
+                            bat "docker build -t %DOCKER_IMAGE% ."
 
-                            // Login to Docker Hub
-                            bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
 
-                            // Push image to Docker Hub
-                            bat "docker push %DOCKER_USER%/madrasati-backend"
-                        }
+                        
                     }
                 }
             }
