@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'mmnassri/madrasati-backend'
-        COMPOSE_FILE = 'demo/docker-compose.yml'
+        COMPOSE_FILE = 'docker-compose.yml'
     }
 
     stages {
