@@ -7,65 +7,37 @@ pipeline {
     }
 
     environment {
-        DOCKER_USERNAME = 'mmnassri'
-        DOCKER_IMAGE = "${DOCKER_USERNAME}/madrasati-backend"
-        CONTAINER_NAME = 'e-learningBackCont'
-        COMPOSE_FILE = 'docker-compose.yml'
+        DOCKER_IMAGE = 'mmnassri/madrasati-backend'
+        COMPOSE_FILE = 'demo/docker-compose.yml'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/MohamedAmineM/e-learningProject.git', branch: 'main'
+                git url: 'https://github.com/MohamedAmineM/e-learningBackendProject.git', branch: 'main'
             }
         }
 
-        stage('Build Docker Image and Push to DockerHub') {
+        stage('Build Docker Image') {
             steps {
                 dir('demo') {
                     script {
-                        echo "======= Building and pushing Backend Docker image ======="
-
-                    
-                            // Build Backend image (SpringBoot)
-                            bat "docker build -t %DOCKER_IMAGE% ."
-
-
-                        
+                        bat "docker build -t ${DOCKER_IMAGE}:latest ."
                     }
                 }
             }
-
-            post {
-                always {
-                    bat 'docker logout'
-                }
-                success {
-                    echo "✅ Backend image push SUCCESS"
-                }
-                failure {
-                    echo "❌ Backend image push FAILED"
-                }
-            }
         }
+
+        
 
         stage('Deploy with Docker Compose') {
             steps {
                 dir('demo') {
                     script {
-                        echo "======= Deploying with Docker Compose ======="
+                        // Make sure external network exists
+                        bat 'docker network ls | grep my-network || docker network create my-network'
 
-                        // Safely check and create Docker network using PowerShell
-                        powershell '''
-                        $networkExists = docker network ls | Select-String "my-network"
-                        if (-not $networkExists) {
-                            docker network create my-network
-                        }
-                        '''
-
-                        // Stop and remove old containers (if any), then start fresh
-                        bat 'docker-compose down || exit 0'
+                        bat 'docker-compose down || true'
                         bat 'docker-compose up -d'
                     }
                 }
@@ -81,10 +53,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Backend container built and running!'
+            echo '✅ Image pushed and services deployed successfully.'
         }
         failure {
-            echo '❌ Something went wrong during the backend pipeline.'
+            echo '❌ Something went wrong during the pipeline.'
         }
     }
 }
