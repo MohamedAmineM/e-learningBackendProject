@@ -34,15 +34,20 @@ pipeline {
             steps {
                 dir('demo') {
                     script {
-                        // Make sure external network exists
-                        bat 'docker network ls | grep my-network || docker network create my-network'
+                        // Remplace grep par PowerShell pour vérifier si le réseau existe
+                        powershell '''
+                        if (-not (docker network ls | Select-String "my-network")) {
+                            docker network create my-network
+                        }
+                        '''
 
-                        bat 'docker-compose down || true'
+                        bat 'docker-compose down || exit 0'
                         bat 'docker-compose up -d'
                     }
                 }
             }
         }
+
 
         stage('Check Running Containers') {
             steps {
