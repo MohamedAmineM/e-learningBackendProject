@@ -17,7 +17,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/MohamedAmineM/e-learningProject.git', branch: 'main'
+                git url: 'https://github.com/MohamedAmineM/e-learningBackendProject.git', branch: 'main'
             }
         }
 
