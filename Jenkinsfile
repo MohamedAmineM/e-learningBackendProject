@@ -34,10 +34,18 @@ pipeline {
             steps {
                 dir('demo') {
                     script {
-                        // Make sure external network exists
-                        bat 'docker network ls | grep my-network || docker network create my-network'
+                        echo "======= Deploying with Docker Compose ======="
 
-                        bat 'docker-compose down || true'
+                        // Safely check and create Docker network using PowerShell
+                        powershell '''
+                        $networkExists = docker network ls | Select-String "my-network"
+                        if (-not $networkExists) {
+                            docker network create my-network
+                        }
+                        '''
+
+                        // Stop and remove old containers (if any), then start fresh
+                        bat 'docker-compose down || exit 0'
                         bat 'docker-compose up -d'
                     }
                 }
