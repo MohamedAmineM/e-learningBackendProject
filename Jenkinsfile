@@ -7,28 +7,58 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'mmnassri/madrasati-backend'
-        COMPOSE_FILE = 'demo/docker-compose.yml'
+        DOCKER_USERNAME = 'mmnassri'
+        DOCKER_IMAGE = "${DOCKER_USERNAME}/madrasati-backend"
+        CONTAINER_NAME = 'e-learningBackCont'
+        COMPOSE_FILE = 'docker-compose.yml'
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/MohamedAmineM/e-learningBackendProject.git', branch: 'main'
+                git url: 'https://github.com/MohamedAmineM/e-learningProject.git', branch: 'main'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Image and Push to DockerHub') {
             steps {
                 dir('demo') {
                     script {
-                        bat "docker build -t ${DOCKER_IMAGE}:latest ."
+                        echo "======= Building and pushing Backend Docker image ======="
+
+                        withCredentials([
+                            usernamePassword(
+                                credentialsId: 'dockerhub_cred',
+                                usernameVariable: 'DOCKER_USER',
+                                passwordVariable: 'DOCKER_PASS'
+                            )
+                        ]) {
+                            // Build Backend image (SpringBoot)
+                            bat "docker build -t %DOCKER_USER%/madrasati-backend ."
+
+                            // Login to Docker Hub
+                            bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+
+                            // Push image to Docker Hub
+                            bat "docker push %DOCKER_USER%/madrasati-backend"
+                        }
                     }
                 }
             }
-        }
 
-        
+            post {
+                always {
+                    bat 'docker logout'
+                }
+                success {
+                    echo "✅ Backend image push SUCCESS"
+                }
+                failure {
+                    echo "❌ Backend image push FAILED"
+                }
+            }
+        }
 
         stage('Deploy with Docker Compose') {
             steps {
@@ -61,10 +91,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Image pushed and services deployed successfully.'
+            echo '✅ Backend container built and running!'
         }
         failure {
-            echo '❌ Something went wrong during the pipeline.'
+            echo '❌ Something went wrong during the backend pipeline.'
         }
     }
 }
