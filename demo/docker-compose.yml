@@ -20,7 +20,7 @@ services:
     image: mmnassri/madrasati-frontend       # image buildée depuis ton pipeline Jenkins frontend
     container_name: e-learningFrontCont
     ports:
-      - "3000:80"
+      - "3000:3000"
     networks:
       - my-network
 
@@ -34,7 +34,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - my-network    
 
