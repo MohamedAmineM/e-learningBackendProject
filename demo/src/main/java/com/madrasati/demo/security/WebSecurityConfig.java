@@ -65,9 +65,10 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .configurationSource(request -> {
                 var corsConfig = new org.springframework.web.cors.CorsConfiguration();
                 corsConfig.setAllowedOrigins(List.of(
-                    "https://api.24.lebondeveloppeur.net",
-                    "http://localhost:3000"
-                ));
+                     "https://api.24.lebondeveloppeur.net",
+                     "https://unritually-eponymous-lura.ngrok-free.dev",
+                     "http://localhost:3000"
+                )); 
                 corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 corsConfig.setAllowedHeaders(List.of("*"));
                 corsConfig.setAllowCredentials(true);
