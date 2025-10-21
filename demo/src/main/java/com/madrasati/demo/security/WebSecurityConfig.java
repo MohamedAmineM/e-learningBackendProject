@@ -67,7 +67,8 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 corsConfig.setAllowedOrigins(List.of(
                      "https://api.24.lebondeveloppeur.net",
                      "https://unritually-eponymous-lura.ngrok-free.dev",
-                     "http://localhost:3000"
+                     "http://localhost:3000",
+                     "http://localhost:80"
                 )); 
                 corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 corsConfig.setAllowedHeaders(List.of("*"));
