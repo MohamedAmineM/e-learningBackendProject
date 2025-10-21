@@ -20,13 +20,13 @@ services:
     image: mmnassri/madrasati-frontend       # image buildée depuis ton pipeline Jenkins frontend
     container_name: e-learningFrontCont
     ports:
-      - "3000:3000"
+      - "3000:80"
     networks:
       - my-network
 
   # --- Reverse proxy
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: nginx-proxy
     depends_on:
       - backend
