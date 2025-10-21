@@ -16,13 +16,17 @@ services:
       - db
 
   # --- Frontend (vient de ton autre repo)
-  frontend:
-    image: mmnassri/madrasati-frontend       # image buildée depuis ton pipeline Jenkins frontend
-    container_name: e-learningFrontCont
-    ports:
-      - "3000:80"
-    networks:
-      - my-network
+
+  
+#  frontend:
+ #   image: mmnassri/madrasati-frontend       # image buildée depuis ton pipeline Jenkins frontend
+  #  container_name: e-learningFrontCont
+  #  ports:
+  #    - "3000:80"
+  #  networks:
+   #   - my-network
+
+   
 
   # --- Reverse proxy
   nginx:
@@ -30,7 +34,7 @@ services:
     container_name: nginx-proxy
     depends_on:
       - backend
-      - frontend
+     # - frontend
     ports:
       - "80:80"
     volumes:
