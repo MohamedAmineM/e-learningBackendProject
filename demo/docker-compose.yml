@@ -15,11 +15,11 @@ services:
     depends_on:
       - db
 
-  # --- Frontend (vient de ton autre repo)
+  # --- Frontend (vient de mon autre repo e-learning front)
 
   
 #  frontend:
- #   image: mmnassri/madrasati-frontend       # image buildée depuis ton pipeline Jenkins frontend
+ #   image: mmnassri/madrasati-frontend       # image buildée depuis mon pipeline Jenkins frontend
   #  container_name: e-learningFrontCont
   #  ports:
   #    - "3000:80"
