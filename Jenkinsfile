@@ -24,7 +24,7 @@ pipeline {
         stage('SonarQube Analysis') {
                     
                     steps {
-                            dir('demo') {
+                           // dir('demo') {
                                 script {
                                     withSonarQubeEnv('mmnassriSonarQube') {
                                         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -37,7 +37,7 @@ pipeline {
                                             }
                                         }
                                     }
-                            }
+                            //}
                     }
             }
             
