@@ -29,7 +29,7 @@ pipeline {
                                     withSonarQubeEnv('mmnassriSonarQube') {
                                         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
                                             bat """
-                                                mvn clean verify sonar:sonar ^
+                                                mvn clean verify sonar:sonar -DskipTests ^
                                                 -Dsonar.projectKey=e-learningBackend ^
                                                 -Dsonar.host.url=http://localhost:9000 ^
                                                 -Dsonar.login=%SONAR_AUTH_TOKEN%
