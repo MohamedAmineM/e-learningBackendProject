@@ -54,8 +54,9 @@ public class UserService implements IUserService {
 
 	@Override
 	public User getUser(Long id) {
-		// TODO Auto-generated method stub
-		return userRepository.findById(id).get();
+    
+		return userRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id: " + id)); //Optional
 	}
 
 }
