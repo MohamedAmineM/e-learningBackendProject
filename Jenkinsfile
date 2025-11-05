@@ -21,12 +21,63 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image and Push to DockerHub') {
+        stage('SonarQube Analysis') {
+                    
+                    steps {
+                        script {
+                            withSonarQubeEnv('mmnassriSonarQube') {
+                                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
+                                    bat """
+                                        "${tool 'SonarQubeScanner'}/bin/sonar-scanner.bat" ^
+                                        -Dsonar.projectKey=e-learningBackend ^
+                                        -Dsonar.sources=. ^
+                                        -Dsonar.host.url=http://localhost:9000 ^
+                                        -Dsonar.login=%SONAR_AUTH_TOKEN%
+                                    """
+                                    }
+                                }
+                            }
+                    }
+                }
+            
+                stage('Quality Gate') {
+                        steps {
+                            timeout(time: 1, unit: 'HOURS') {
+                                waitForQualityGate abortPipeline: true
+                            }
+                        }
+                    }
+
+
+        stage('Build Docker Image') {
             steps {
                 dir('demo') {
                     script {
-                        echo "======= Building and pushing Backend Docker image ======="
+                        echo "======= Building backend Docker image ======="
+                        bat "docker build -t ${DOCKER_IMAGE}:latest ."
+                    }
+                }
+            }
+        }
 
+        stage('Scan Docker Image with Trivy') {
+            steps {
+                dir('demo') {
+                    script {
+                        echo "======= Running Trivy scan (HIGH & CRITICAL) ======="
+                        bat """
+                        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --severity HIGH,CRITICAL ${DOCKER_IMAGE}:latest
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to DockerHub') {
+            steps {
+                dir('demo') {
+                    script {
+                        echo "======= Pushing backend Docker image to DockerHub ======="
                         withCredentials([
                             usernamePassword(
                                 credentialsId: 'dockerhub_cred',
@@ -34,31 +85,17 @@ pipeline {
                                 passwordVariable: 'DOCKER_PASS'
                             )
                         ]) {
-                            // Build Backend image (SpringBoot)
-                            bat "docker build -t %DOCKER_USER%/madrasati-backend ."
-
                             // Login to Docker Hub
-                            bat "echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin"
+                            bat "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
 
-                            // Push image to Docker Hub
-                            bat "docker push %DOCKER_USER%/madrasati-backend"
+                            // Push image
+                            bat "docker push ${DOCKER_IMAGE}:latest"
                         }
                     }
                 }
             }
-
-            post {
-                always {
-                    bat 'docker logout'
-                }
-                success {
-                    echo "✅ Backend image push SUCCESS"
-                }
-                failure {
-                    echo "❌ Backend image push FAILED"
-                }
-            }
         }
+
 
         stage('Deploy with Docker Compose') {
             steps {
