@@ -24,21 +24,23 @@ pipeline {
         stage('SonarQube Analysis') {
                     
                     steps {
-                        script {
-                            withSonarQubeEnv('mmnassriSonarQube') {
-                                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
-                                    bat """
-                                        "${tool 'SonarQubeScanner'}/bin/sonar-scanner.bat" ^
-                                        -Dsonar.projectKey=e-learningBackend ^
-                                        -Dsonar.sources=. ^
-                                        -Dsonar.host.url=http://localhost:9000 ^
-                                        -Dsonar.login=%SONAR_AUTH_TOKEN%
-                                    """
+                            dir('demo') {
+                                script {
+                                    withSonarQubeEnv('mmnassriSonarQube') {
+                                        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
+                                            bat """
+                                                "${tool 'SonarQubeScanner'}/bin/sonar-scanner.bat" ^
+                                                -Dsonar.projectKey=e-learningBackend ^
+                                                -Dsonar.sources=. ^
+                                                -Dsonar.host.url=http://localhost:9000 ^
+                                                -Dsonar.login=%SONAR_AUTH_TOKEN%
+                                            """
+                                            }
+                                        }
                                     }
-                                }
                             }
                     }
-                }
+            }
             
                 stage('Quality Gate') {
                         steps {
