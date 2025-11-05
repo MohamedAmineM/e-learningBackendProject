@@ -24,20 +24,21 @@ pipeline {
         stage('SonarQube Analysis') {
                     
                     steps {
-                           // dir('demo') {
+                            dir('demo') {
                                 script {
                                     withSonarQubeEnv('mmnassriSonarQube') {
                                         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
                                             bat """
                                                 mvn clean verify sonar:sonar -DskipTests ^
                                                 -Dsonar.projectKey=e-learningBackend ^
+                                                -Dsonar.projectName=e-learningBackend ^
                                                 -Dsonar.host.url=http://localhost:9000 ^
                                                 -Dsonar.login=%SONAR_AUTH_TOKEN%
                                             """
                                             }
                                         }
                                     }
-                            //}
+                            }
                     }
             }
             
