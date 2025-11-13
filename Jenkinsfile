@@ -33,7 +33,7 @@ pipeline {
                                                 -Dsonar.projectKey=e-learningBackend ^
                                                 -Dsonar.projectName=e-learningBackend ^
                                                 -Dsonar.host.url=http://localhost:9000 ^
-                                                -Dsonar.login=%SONAR_AUTH_TOKEN%
+                                                -Dsonar.token=%SONAR_AUTH_TOKEN%
                                             """
                                             }
                                         }
