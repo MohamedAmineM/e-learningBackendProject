@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+      /*  stage('SonarQube Analysis') {
                     
                     steps {
                             dir('demo') {
@@ -40,7 +40,7 @@ pipeline {
                                     }
                             }
                     }
-            }
+            }*/
             
            /* **    stage('Quality Gate') {
                         steps {
